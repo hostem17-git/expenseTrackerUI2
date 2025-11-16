@@ -27,6 +27,9 @@ const Signup = ({ onSwitchToLogin }) => {
   return (
     <div className="auth-container">
       <div className="auth-card">
+        <div className="auth-brand">
+          <h1 className="auth-brand-title">Whatspense</h1>
+        </div>
         <h2>Sign Up</h2>
         <p className="auth-subtitle">Create a new account to get started.</p>
         

@@ -77,7 +77,7 @@
 .bar {
   width: 100%;
   max-width: 60px;
-  background: linear-gradient(180deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+  background: var(--accent-color);
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   position: relative;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -150,7 +150,7 @@
 .category-chart-item:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
-  border-color: var(--accent-color);
+  border-color: var(--border-color);
 }
 
 .category-chart-header {
@@ -184,7 +184,7 @@
 .category-chart-amount {
   font-size: 18px;
   font-weight: 700;
-  color: var(--accent-color);
+  color: var(--text-primary);
   letter-spacing: -0.3px;
 }
 

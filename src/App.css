@@ -148,36 +148,47 @@
 }
 
 .add-expense-button {
-  background: linear-gradient(135deg, var(--accent-color) 0%, #2563EB 100%);
+  background: var(--accent-color);
   font-weight: 600;
   padding: 10px 20px;
+  color: white;
+}
+
+.add-expense-button:hover {
+  background: var(--accent-hover);
 }
 
 .logout-button {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
+  background: transparent;
+  color: var(--text-secondary);
   border: 1px solid var(--border-color);
 }
 
 .logout-button:hover {
-  background: var(--bg-secondary);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
   transform: translateY(-1px);
 }
 
 .charts-button.active {
-  background: var(--success-color);
+  background: var(--accent-color);
+  color: white;
 }
 
 .charts-button.active:hover {
-  background: #059669;
+  background: var(--accent-hover);
 }
 
 .categorize-button {
-  background: linear-gradient(135deg, var(--warning-color) 0%, #D97706 100%);
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
 }
 
 .categorize-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #D97706 0%, #B45309 100%);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--accent-color);
 }
 
 .categorize-button:disabled {

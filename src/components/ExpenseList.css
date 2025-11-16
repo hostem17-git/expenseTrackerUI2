@@ -36,23 +36,25 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px 24px;
-  background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   margin-bottom: 24px;
-  color: white;
-  box-shadow: var(--shadow-md);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .total-label {
   font-size: 14px;
   font-weight: 500;
-  opacity: 0.95;
+  color: var(--text-secondary);
 }
 
 .total-amount {
   font-size: 28px;
   font-weight: 700;
   letter-spacing: -0.5px;
+  color: var(--text-primary);
 }
 
 .expense-list {
@@ -96,7 +98,7 @@
 .expense-card:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
-  border-color: var(--accent-color);
+  border-color: var(--border-color);
 }
 
 .expense-main {
@@ -127,8 +129,9 @@
 }
 
 .primary-category {
-  background: var(--accent-color);
-  color: white;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
   padding: 4px 10px;
   border-radius: var(--radius-sm);
   font-size: 11px;
@@ -149,7 +152,7 @@
 .expense-amount {
   font-size: 20px;
   font-weight: 700;
-  color: var(--accent-color);
+  color: var(--text-primary);
   white-space: nowrap;
   letter-spacing: -0.3px;
 }
@@ -195,7 +198,8 @@
 }
 
 .edit-button:hover {
-  color: var(--accent-color);
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
 }
 
 .delete-button:hover {

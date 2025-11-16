@@ -2,7 +2,7 @@ import React from 'react';
 import { formatDate, formatCurrency } from '../utils/dateUtils';
 import './ExpenseList.css';
 
-const ExpenseList = ({ expenses, dateRange, loading, error, onEdit, onDelete, selectedIds, onSelectExpense }) => {
+const ExpenseList = ({ expenses, totalAmount: propTotalAmount, dateRange, loading, error, onEdit, onDelete, selectedIds, onSelectExpense }) => {
   const formatDateRange = () => {
     if (!dateRange) return '';
     const start = formatDate(dateRange.start);
@@ -54,7 +54,10 @@ const ExpenseList = ({ expenses, dateRange, loading, error, onEdit, onDelete, se
     );
   }
 
-  const totalAmount = expenses.reduce((sum, expense) => sum + expense.amount, 0);
+  // Use provided totalAmount (from all filtered expenses) or calculate from current page as fallback
+  const totalAmount = propTotalAmount !== undefined 
+    ? propTotalAmount 
+    : expenses.reduce((sum, expense) => sum + (expense.amount || 0), 0);
 
   return (
     <div className="expense-list-container">

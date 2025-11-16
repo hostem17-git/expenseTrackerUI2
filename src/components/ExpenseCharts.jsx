@@ -3,7 +3,7 @@ import { formatCurrency } from '../utils/dateUtils';
 import PieChart from './PieChart';
 import './ExpenseCharts.css';
 
-const ExpenseCharts = ({ expenses, summary }) => {
+const ExpenseCharts = ({ summary }) => {
   // Category breakdown for pie chart (using summary data)
   const categoryData = summary || [];
   const totalAmount = categoryData.reduce((sum, item) => sum + parseFloat(item.value || 0), 0);

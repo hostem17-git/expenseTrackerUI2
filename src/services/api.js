@@ -39,7 +39,7 @@ apiClient.interceptors.response.use(
 
 // Helper function to get token from localStorage
 const getAuthToken = () => {
-  return localStorage.getItem('authToken') || API_CONFIG.token;
+  return localStorage.getItem('authToken')
 };
 
 // Helper function to set token in localStorage
@@ -175,16 +175,27 @@ export const fetchSummary = async ({
     const data = response.data;
     
     // Handle the API response structure: data.data is an array
+    let summaryData = [];
     if (data?.data && Array.isArray(data.data)) {
-      return data.data;
+      summaryData = data.data;
+    } else if (Array.isArray(data)) {
+      summaryData = data;
     }
     
-    // Fallback
-    if (Array.isArray(data)) {
-      return data;
-    }
-    
-    return [];
+    // Normalize response format: API may return {primarycategory, total, count} or {id, value}
+    // Convert to consistent format: {id, value}
+    return summaryData.map(item => {
+      // If API returns {primarycategory, total, count} format
+      if (item.primarycategory !== undefined && item.total !== undefined) {
+        return {
+          id: item.primarycategory,
+          value: item.total,
+          count: item.count
+        };
+      }
+      // If API returns {id, value} format (already normalized)
+      return item;
+    });
   } catch (error) {
     if (error.response) {
       if (error.response.status === 401) {
@@ -336,6 +347,64 @@ export const sendOTP = async (phoneNumber) => {
   } catch (error) {
     if (error.response) {
       const message = error.response.data?.message || 'Failed to send OTP';
+      throw new Error(message);
+    } else if (error.request) {
+      throw new Error('Network error: Could not connect to the server.');
+    } else {
+      throw error;
+    }
+  }
+};
+
+/**
+ * Initiates forgot password flow by sending OTP to email or phone number
+ * @param {Object} options - Forgot password options
+ * @param {string} options.email - Email address (optional)
+ * @param {string} options.phoneNumber - Phone number in E.164 format (optional)
+ * @returns {Promise<Object>} Response data
+ */
+export const forgotPassword = async ({ email, phoneNumber }) => {
+  try {
+    const response = await apiClient.post('/auth/forgotPassword', {
+      ...(email && { email }),
+      ...(phoneNumber && { phoneNumber }),
+    });
+
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      const message = error.response.data?.message || 'Failed to send password reset OTP';
+      throw new Error(message);
+    } else if (error.request) {
+      throw new Error('Network error: Could not connect to the server.');
+    } else {
+      throw error;
+    }
+  }
+};
+
+/**
+ * Resets password using OTP
+ * @param {Object} options - Reset password options
+ * @param {string} options.email - Email address (optional, must match forgotPassword)
+ * @param {string} options.phoneNumber - Phone number in E.164 format (optional, must match forgotPassword)
+ * @param {string} options.otp - 6-digit OTP
+ * @param {string} options.newPassword - New password (minimum 6 characters)
+ * @returns {Promise<Object>} Response data
+ */
+export const resetPassword = async ({ email, phoneNumber, otp, newPassword }) => {
+  try {
+    const response = await apiClient.post('/auth/resetPassword', {
+      ...(email && { email }),
+      ...(phoneNumber && { phoneNumber }),
+      otp,
+      newPassword,
+    });
+
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      const message = error.response.data?.message || 'Failed to reset password';
       throw new Error(message);
     } else if (error.request) {
       throw new Error('Network error: Could not connect to the server.');

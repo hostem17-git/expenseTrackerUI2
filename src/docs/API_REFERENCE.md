@@ -274,6 +274,166 @@ Authorization: Bearer <token>
 
 ---
 
+#### 1.6 Forgot Password
+**Endpoint:** `POST /api/v1/auth/forgotPassword`
+
+**Description:** Initiates a password reset flow. Users can find their account by providing either their email or phone number. The OTP is always sent to the user's phone number via WhatsApp, regardless of which identifier was used to find the account.
+
+**Request Body:**
+```json
+{
+  "email": "string (optional) - User's email address",
+  "phoneNumber": "string (optional) - User's phone number in E.164 format (+1234567890)"
+}
+```
+*Note: Either `email` or `phoneNumber` must be provided, but not both.*
+
+**Response:**
+- **200 OK:**
+  ```json
+  {
+    "message": "If a user exists with this identifier, an OTP has been sent"
+  }
+  ```
+
+**Error Responses:**
+- **400 Bad Request:**
+  ```json
+  {
+    "message": "Email or phone number is required"
+  }
+  ```
+  ```json
+  {
+    "message": "Invalid email format"
+  }
+  ```
+  ```json
+  {
+    "message": "Invalid phone number format"
+  }
+  ```
+- **500 Internal Server Error:**
+  ```json
+  {
+    "message": "Failed to send OTP"
+  }
+  ```
+  ```json
+  {
+    "message": "Internal server error"
+  }
+  ```
+
+**Notes:**
+- OTP is valid for 10 minutes
+- OTP is always sent via WhatsApp to the user's phone number (from their account), regardless of whether they searched by email or phone number
+- The user must have a phone number associated with their account for the OTP to be sent
+- The response message is the same whether the user exists or not (security best practice)
+
+---
+
+#### 1.7 Reset Password
+**Endpoint:** `POST /api/v1/auth/resetPassword`
+
+**Description:** Resets the user's password after verifying the OTP sent via the forgot password flow.
+
+**Request Body:**
+```json
+{
+  "email": "string (optional) - User's email address (must match the one used in forgotPassword)",
+  "phoneNumber": "string (optional) - User's phone number in E.164 format (must match the one used in forgotPassword)",
+  "otp": "string (required) - 6-digit OTP received via email/WhatsApp",
+  "newPassword": "string (required) - New password (minimum 6 characters)"
+}
+```
+*Note: Either `email` or `phoneNumber` must be provided, matching the identifier used in the forgotPassword request.*
+
+**Response:**
+- **200 OK:**
+  ```json
+  {
+    "message": "Password reset successfully"
+  }
+  ```
+
+**Error Responses:**
+- **400 Bad Request:**
+  ```json
+  {
+    "message": "OTP and new password are required"
+  }
+  ```
+  ```json
+  {
+    "message": "Email or phone number is required"
+  }
+  ```
+  ```json
+  {
+    "message": "OTP must be 6 digits"
+  }
+  ```
+  ```json
+  {
+    "message": "Password must be at least 6 characters long"
+  }
+  ```
+  ```json
+  {
+    "message": "Invalid email format"
+  }
+  ```
+  ```json
+  {
+    "message": "Invalid phone number format"
+  }
+  ```
+  ```json
+  {
+    "message": "No password reset request found. Please request a new OTP."
+  }
+  ```
+  ```json
+  {
+    "message": "OTP expired. Please request a new one."
+  }
+  ```
+  ```json
+  {
+    "message": "Invalid OTP"
+  }
+  ```
+  ```json
+  {
+    "message": "Invalid request"
+  }
+  ```
+- **404 Not Found:**
+  ```json
+  {
+    "message": "User not found"
+  }
+  ```
+- **500 Internal Server Error:**
+  ```json
+  {
+    "message": "Failed to update password"
+  }
+  ```
+  ```json
+  {
+    "message": "Internal server error"
+  }
+  ```
+
+**Notes:**
+- The OTP must be used within 10 minutes of being sent
+- The email/phone number must match the one used in the forgotPassword request
+- After successful password reset, the OTP is invalidated
+
+---
+
 ### 2. Expense Endpoints (`/api/v1/expense`)
 
 **All expense endpoints require authentication via Bearer token in the Authorization header.**
@@ -628,10 +788,12 @@ Authorization: Bearer <token>
 
 ### 3. User Endpoints (`/api/v1/user`)
 
-#### 3.1 Reset Password
+**All user endpoints require authentication via Bearer token in the Authorization header.**
+
+#### 3.1 Change Password (When Logged In)
 **Endpoint:** `POST /api/v1/user/resetPassword`
 
-**Description:** Resets a user's password. **Currently returns 500 error - implementation pending.**
+**Description:** Changes a user's password when they are already logged in. Requires the current password. **Note: This is different from the forgot password flow (`/api/v1/auth/resetPassword`) which uses OTP verification.**
 
 **Headers:**
 ```
@@ -654,6 +816,7 @@ Authorization: Bearer <token>
     "message": "Implementation pending"
   }
   ```
+  *Note: This endpoint is currently not implemented. Use the forgot password flow (`/api/v1/auth/forgotPassword` and `/api/v1/auth/resetPassword`) instead.*
 
 ---
 

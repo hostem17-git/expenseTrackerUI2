@@ -3,7 +3,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { sendOTP } from '../services/api';
 import './Login.css';
 
-const Login = ({ onSwitchToSignup }) => {
+const Login = ({ onSwitchToSignup, onSwitchToForgotPassword }) => {
   const [authMethod, setAuthMethod] = useState('email'); // 'email' or 'otp'
   
   // Email/Password state
@@ -153,6 +153,9 @@ const Login = ({ onSwitchToSignup }) => {
   return (
     <div className="auth-container">
       <div className="auth-card">
+        <div className="auth-brand">
+          <h1 className="auth-brand-title">Whatspense</h1>
+        </div>
         <h2>Sign In</h2>
         <p className="auth-subtitle">Welcome back! Please sign in to continue.</p>
         
@@ -200,6 +203,19 @@ const Login = ({ onSwitchToSignup }) => {
                 required
                 placeholder="Enter your password"
               />
+              <div className="forgot-password-link">
+                <button
+                  type="button"
+                  className="link-button"
+                  onClick={() => {
+                    if (onSwitchToForgotPassword) {
+                      onSwitchToForgotPassword();
+                    }
+                  }}
+                >
+                  Forgot Password?
+                </button>
+              </div>
             </div>
             
             <button type="submit" className="auth-button" disabled={loading}>

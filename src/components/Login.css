@@ -19,6 +19,23 @@
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+.auth-brand {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth-brand-title {
+  color: var(--text-primary);
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .auth-card h2 {
   color: var(--text-primary);
   font-size: 28px;
@@ -69,7 +86,7 @@
 .auth-button {
   width: 100%;
   padding: 12px;
-  background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+  background: var(--accent-color);
   color: white;
   border: none;
   border-radius: var(--radius-md);
@@ -152,12 +169,12 @@
 }
 
 .tab-button:hover {
-  color: var(--accent-color);
-  background: var(--bg-secondary);
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
 }
 
 .tab-button.active {
-  color: var(--accent-color);
+  color: var(--text-primary);
   border-bottom-color: var(--accent-color);
   font-weight: 600;
 }
@@ -202,6 +219,16 @@
 .resend-otp {
   font-size: 12px;
   color: var(--accent-color);
+}
+
+.forgot-password-link {
+  margin-top: 8px;
+  text-align: right;
+}
+
+.forgot-password-link .link-button {
+  font-size: 13px;
+  padding: 0;
 }
 
 @media (max-width: 480px) {

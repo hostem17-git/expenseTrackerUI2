@@ -13,6 +13,7 @@ import Pagination from './components/Pagination';
 import ThemeToggle from './components/ThemeToggle';
 import Login from './components/Login';
 import Signup from './components/Signup';
+import ForgotPassword from './components/ForgotPassword';
 import { getCurrentWeek } from './utils/dateUtils';
 import { fetchExpenses, fetchSummary, addExpense, updateExpense, deleteExpense, categorizePendingExpenses } from './services/api';
 import { filterExpensesBySearch, filterExpensesByCategory, sortExpenses } from './utils/filterAndSort';
@@ -94,6 +95,9 @@ const ExpenseTracker = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const paginatedExpenses = filteredExpenses.slice(startIndex, endIndex);
+  
+  // Calculate total amount from all filtered expenses (not just current page)
+  const totalFilteredAmount = filteredExpenses.reduce((sum, expense) => sum + (expense.amount || 0), 0);
 
   const loadExpenses = async (dateRange) => {
     setLoading(true);
@@ -291,7 +295,7 @@ const ExpenseTracker = () => {
       <header className="app-header">
         <div className="header-content">
           <div>
-            <h1>Expense Tracker</h1>
+            <h1>Whatspense</h1>
             <p>Track and manage your expenses with ease</p>
           </div>
           <div className="header-actions">
@@ -353,7 +357,7 @@ const ExpenseTracker = () => {
         
         {showCharts && (
           <div className="charts-section">
-            <ExpenseCharts expenses={allExpenses} summary={summary} />
+            <ExpenseCharts summary={summary} />
           </div>
         )}
         
@@ -378,6 +382,7 @@ const ExpenseTracker = () => {
           
           <ExpenseList 
             expenses={paginatedExpenses} 
+            totalAmount={totalFilteredAmount}
             dateRange={dateRange}
             loading={loading}
             error={error}
@@ -414,14 +419,19 @@ const ExpenseTracker = () => {
 };
 
 const AuthScreen = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const [authView, setAuthView] = useState('login'); // 'login', 'signup', 'forgotPassword'
 
   return (
     <>
-      {isLogin ? (
-        <Login onSwitchToSignup={() => setIsLogin(false)} />
+      {authView === 'login' ? (
+        <Login 
+          onSwitchToSignup={() => setAuthView('signup')}
+          onSwitchToForgotPassword={() => setAuthView('forgotPassword')}
+        />
+      ) : authView === 'signup' ? (
+        <Signup onSwitchToLogin={() => setAuthView('login')} />
       ) : (
-        <Signup onSwitchToLogin={() => setIsLogin(true)} />
+        <ForgotPassword onBackToLogin={() => setAuthView('login')} />
       )}
     </>
   );

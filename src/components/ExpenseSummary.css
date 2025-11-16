@@ -39,23 +39,25 @@
   justify-content: space-between;
   align-items: center;
   padding: 20px 24px;
-  background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   margin-bottom: 24px;
-  color: white;
-  box-shadow: var(--shadow-md);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .total-label {
   font-size: 14px;
   font-weight: 500;
-  opacity: 0.95;
+  color: var(--text-secondary);
 }
 
 .total-amount {
   font-size: 28px;
   font-weight: 700;
   letter-spacing: -0.5px;
+  color: var(--text-primary);
 }
 
 .summary-list {
@@ -80,8 +82,8 @@
 .summary-item.clickable:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
-  border-color: var(--accent-color);
-  background: var(--bg-secondary);
+  border-color: var(--border-color);
+  background: var(--bg-tertiary);
 }
 
 .drill-down-hint {
@@ -109,7 +111,7 @@
 .category-amount {
   font-size: 18px;
   font-weight: 700;
-  color: var(--accent-color);
+  color: var(--text-primary);
   letter-spacing: -0.3px;
 }
 
@@ -124,7 +126,7 @@
 
 .summary-item-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+  background: var(--accent-color);
   border-radius: 3px;
   transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }

@@ -131,7 +131,7 @@
 }
 
 .save-button {
-  background: linear-gradient(135deg, var(--accent-color) 0%, var(--accent-hover) 100%);
+  background: var(--accent-color);
   color: white;
   box-shadow: var(--shadow-sm);
 }

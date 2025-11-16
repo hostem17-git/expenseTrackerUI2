@@ -27,18 +27,19 @@
 }
 
 .filter-btn:hover {
-  background: var(--bg-secondary);
-  border-color: var(--accent-color);
-  color: var(--accent-color);
+  background: var(--bg-tertiary);
+  border-color: var(--border-color);
+  color: var(--text-primary);
   transform: translateY(-1px);
   box-shadow: var(--shadow-sm);
 }
 
 .filter-btn.active {
-  background: var(--accent-color);
-  color: white;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
   border-color: var(--accent-color);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-sm);
+  font-weight: 600;
 }
 
 .custom-date-inputs {

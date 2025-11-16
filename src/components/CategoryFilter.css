@@ -101,8 +101,9 @@
   align-items: center;
   gap: 8px;
   padding: 6px 14px;
-  background: var(--accent-color);
-  color: white;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
   border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
@@ -110,9 +111,9 @@
 }
 
 .filter-chip button {
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--bg-secondary);
   border: none;
-  color: white;
+  color: var(--text-secondary);
   width: 18px;
   height: 18px;
   border-radius: 50%;
@@ -127,7 +128,8 @@
 }
 
 .filter-chip button:hover {
-  background: rgba(255, 255, 255, 0.4);
+  background: var(--bg-primary);
+  color: var(--text-primary);
   transform: scale(1.1);
 }
 
