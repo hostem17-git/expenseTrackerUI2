@@ -2,7 +2,7 @@ import React from 'react';
 import { formatDate, formatCurrency } from '../utils/dateUtils';
 import './ExpenseList.css';
 
-const ExpenseList = ({ expenses, dateRange, loading, error, onEdit, onDelete }) => {
+const ExpenseList = ({ expenses, dateRange, loading, error, onEdit, onDelete, selectedIds, onSelectExpense }) => {
   const formatDateRange = () => {
     if (!dateRange) return '';
     const start = formatDate(dateRange.start);
@@ -70,7 +70,16 @@ const ExpenseList = ({ expenses, dateRange, loading, error, onEdit, onDelete }) 
 
       <div className="expense-list">
         {expenses.map((expense) => (
-          <div key={expense.id} className="expense-card">
+          <div key={expense.id} className={`expense-card-wrapper ${onSelectExpense ? 'with-checkbox' : ''}`}>
+            {onSelectExpense && (
+              <input
+                type="checkbox"
+                className="expense-checkbox"
+                checked={selectedIds?.has(expense.id) || false}
+                onChange={(e) => onSelectExpense(expense.id, e.target.checked)}
+              />
+            )}
+            <div className="expense-card">
             <div className="expense-main">
               <div className="expense-info">
                 <h3 className="expense-name">{expense.expense}</h3>
@@ -109,6 +118,7 @@ const ExpenseList = ({ expenses, dateRange, loading, error, onEdit, onDelete }) 
                   )}
                 </div>
               )}
+            </div>
             </div>
           </div>
         ))}

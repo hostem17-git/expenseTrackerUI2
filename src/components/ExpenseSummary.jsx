@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { formatCurrency } from '../utils/dateUtils';
+import SecondarySummary from './SecondarySummary';
 import './ExpenseSummary.css';
 
 const ExpenseSummary = ({ summary, dateRange, loading, error }) => {
+  const [selectedPrimaryCategory, setSelectedPrimaryCategory] = useState(null);
   const formatDateRange = () => {
     if (!dateRange) return '';
     const start = new Date(dateRange.start).toLocaleDateString('en-US', {
@@ -86,9 +88,13 @@ const ExpenseSummary = ({ summary, dateRange, loading, error }) => {
           const percentage = total > 0 ? ((amount / total) * 100).toFixed(1) : 0;
           
           return (
-            <div key={item.id || index} className="summary-item">
+            <div 
+              key={item.id || index} 
+              className="summary-item clickable"
+              onClick={() => setSelectedPrimaryCategory(item.id)}
+            >
               <div className="summary-item-header">
-                <span className="category-name">{item.id}</span>
+                <span className="category-name">{item.id} <span className="drill-down-hint">👆 Click to view details</span></span>
                 <span className="category-amount">{formatCurrency(amount)}</span>
               </div>
               <div className="summary-item-bar">
@@ -104,6 +110,14 @@ const ExpenseSummary = ({ summary, dateRange, loading, error }) => {
           );
         })}
       </div>
+      
+      {selectedPrimaryCategory && (
+        <SecondarySummary
+          primaryCategory={selectedPrimaryCategory}
+          dateRange={dateRange}
+          onClose={() => setSelectedPrimaryCategory(null)}
+        />
+      )}
     </div>
   );
 };

@@ -23,6 +23,20 @@ apiClient.interceptors.request.use(
   }
 );
 
+// Response interceptor to handle 401 errors
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      // Clear token and redirect to login
+      setAuthToken(null);
+      // Trigger a custom event that the app can listen to
+      window.dispatchEvent(new CustomEvent('auth:unauthorized'));
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Helper function to get token from localStorage
 const getAuthToken = () => {
   return localStorage.getItem('authToken') || API_CONFIG.token;
@@ -180,6 +194,62 @@ export const fetchSummary = async ({
         throw new Error('Summary API endpoint not found');
       }
       throw new Error(`Failed to fetch summary: ${error.response.status} ${error.response.statusText}`);
+    } else if (error.request) {
+      throw new Error('Network error: Could not connect to the server. Please check if the API is running.');
+    } else {
+      throw error;
+    }
+  }
+};
+
+/**
+ * Fetches secondary category summary for a specific primary category
+ * @param {string} primaryCategory - Primary category name
+ * @param {Object} options - Filter options
+ * @param {Date} options.startDate - Start date for filtering
+ * @param {Date} options.endDate - End date for filtering
+ * @returns {Promise<Array>} Array of summary objects with secondarycategory, total, count
+ */
+export const fetchSecondarySummary = async (primaryCategory, {
+  startDate,
+  endDate,
+} = {}) => {
+  try {
+    // Format dates for API (YYYY-MM-DD)
+    const startDateStr = startDate ? formatDateForAPI(startDate) : '1970-01-01';
+    const endDateStr = endDate ? formatDateForAPI(endDate) : formatDateForAPI(new Date());
+
+    const params = {
+      startDate: startDateStr,
+      endDate: endDateStr,
+    };
+
+    // URL encode the primary category for the path parameter
+    const encodedCategory = encodeURIComponent(primaryCategory);
+    const response = await apiClient.get(`/expense/summary/${encodedCategory}`, { params });
+
+    const data = response.data;
+    
+    // Handle the API response structure: data.data is an array
+    if (data?.data && Array.isArray(data.data)) {
+      return data.data;
+    }
+    
+    // Fallback
+    if (Array.isArray(data)) {
+      return data;
+    }
+    
+    return [];
+  } catch (error) {
+    if (error.response) {
+      if (error.response.status === 401) {
+        throw new Error('Unauthorized: Please check your Bearer token');
+      }
+      if (error.response.status === 404) {
+        throw new Error('Secondary summary not found');
+      }
+      throw new Error(`Failed to fetch secondary summary: ${error.response.status} ${error.response.statusText}`);
     } else if (error.request) {
       throw new Error('Network error: Could not connect to the server. Please check if the API is running.');
     } else {
@@ -404,6 +474,36 @@ export const updateExpense = async (id, { expense, amount, created, primarycateg
       throw new Error(message);
     } else if (error.request) {
       throw new Error('Network error: Could not connect to the server.');
+    } else {
+      throw error;
+    }
+  }
+};
+
+/**
+ * Categorizes pending expenses using AI
+ * This API checks all records with "Categorization pending" and categorizes them using ChatGPT
+ * @returns {Promise<Object>} Response data
+ */
+export const categorizePendingExpenses = async () => {
+  try {
+    // This API is on a different base URL
+    const response = await axios.post(
+      'https://expensetrackercronjob.onrender.com/api/v1/updateDB',
+      '',
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (error.response) {
+      const message = error.response.data?.message || 'Failed to categorize expenses';
+      throw new Error(message);
+    } else if (error.request) {
+      throw new Error('Network error: Could not connect to the categorization service.');
     } else {
       throw error;
     }

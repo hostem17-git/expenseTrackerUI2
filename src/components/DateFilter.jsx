@@ -2,7 +2,15 @@ import React, { useState } from 'react';
 import { getCurrentWeek, getCurrentMonth, getCurrentQuarter } from '../utils/dateUtils';
 import './DateFilter.css';
 
-const DateFilter = ({ onFilterChange }) => {
+const DateFilter = ({ onFilterChange, currentDateRange }) => {
+  const formatDateForDisplay = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
   const [filterType, setFilterType] = useState('week');
   const [customStartDate, setCustomStartDate] = useState('');
   const [customEndDate, setCustomEndDate] = useState('');
@@ -98,6 +106,31 @@ const DateFilter = ({ onFilterChange }) => {
           >
             Apply
           </button>
+        </div>
+      )}
+
+      {currentDateRange && (
+        <div className="current-date-range">
+          <div className="date-range-display">
+            <div className="date-range-field">
+              <label>Start Date:</label>
+              <input
+                type="text"
+                value={formatDateForDisplay(currentDateRange.start)}
+                readOnly
+                className="read-only-date"
+              />
+            </div>
+            <div className="date-range-field">
+              <label>End Date:</label>
+              <input
+                type="text"
+                value={formatDateForDisplay(currentDateRange.end)}
+                readOnly
+                className="read-only-date"
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>

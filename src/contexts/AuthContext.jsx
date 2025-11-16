@@ -20,10 +20,22 @@ export const AuthProvider = ({ children }) => {
     // Check if user is authenticated on mount
     const token = getToken();
     if (token) {
+      // Check if token is expired (JWT tokens expire after 1 hour = 3600 seconds)
+      // Note: This is a simple check. For production, decode JWT and check exp claim
       setIsAuthenticated(true);
-      // Optionally fetch user info here
     }
     setLoading(false);
+
+    // Listen for unauthorized events (401 errors)
+    const handleUnauthorized = () => {
+      setIsAuthenticated(false);
+      setUser(null);
+    };
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+
+    return () => {
+      window.removeEventListener('auth:unauthorized', handleUnauthorized);
+    };
   }, []);
 
   const login = async (email, password) => {
