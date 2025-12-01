@@ -109,10 +109,7 @@
 }
 
 .header-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  align-items: center;
+  display: none;
 }
 
 .add-expense-button,
@@ -230,11 +227,6 @@
 
   .app-header p {
     font-size: 13px;
-  }
-
-  /* Hide header actions on small screens - they're in hamburger menu */
-  .header-actions {
-    display: none;
   }
 }
 

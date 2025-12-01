@@ -1,6 +1,6 @@
 .hamburger-menu-container {
   position: relative;
-  display: none;
+  display: block;
 }
 
 .hamburger-button {
@@ -141,10 +141,4 @@
   flex: 1;
 }
 
-/* Show hamburger menu on small screens */
-@media (max-width: 768px) {
-  .hamburger-menu-container {
-    display: block;
-  }
-}
 
