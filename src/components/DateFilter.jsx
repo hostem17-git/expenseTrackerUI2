@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { getCurrentWeek, getCurrentMonth, getCurrentQuarter } from '../utils/dateUtils';
 import './DateFilter.css';
 
-const DateFilter = ({ onFilterChange, currentDateRange }) => {
+const DateFilter = ({ onFilterChange, currentDateRange, onToggleExpand, isExpanded }) => {
   const [filterType, setFilterType] = useState('week');
   const [customStartDate, setCustomStartDate] = useState('');
   const [customEndDate, setCustomEndDate] = useState('');
@@ -46,31 +46,42 @@ const DateFilter = ({ onFilterChange, currentDateRange }) => {
 
   return (
     <div className="date-filter">
-      <div className="filter-buttons">
-        <button
-          className={`filter-btn ${filterType === 'week' ? 'active' : ''}`}
-          onClick={() => handleFilterChange('week')}
-        >
-          Current Week
-        </button>
-        <button
-          className={`filter-btn ${filterType === 'month' ? 'active' : ''}`}
-          onClick={() => handleFilterChange('month')}
-        >
-          Current Month
-        </button>
-        <button
-          className={`filter-btn ${filterType === 'quarter' ? 'active' : ''}`}
-          onClick={() => handleFilterChange('quarter')}
-        >
-          Current Quarter
-        </button>
-        <button
-          className={`filter-btn ${filterType === 'custom' ? 'active' : ''}`}
-          onClick={() => setFilterType('custom')}
-        >
-          Custom Dates
-        </button>
+      <div className="date-filter-header">
+        <div className="filter-buttons">
+          <button
+            className={`filter-btn ${filterType === 'week' ? 'active' : ''}`}
+            onClick={() => handleFilterChange('week')}
+          >
+            Current Week
+          </button>
+          <button
+            className={`filter-btn ${filterType === 'month' ? 'active' : ''}`}
+            onClick={() => handleFilterChange('month')}
+          >
+            Current Month
+          </button>
+          <button
+            className={`filter-btn ${filterType === 'quarter' ? 'active' : ''}`}
+            onClick={() => handleFilterChange('quarter')}
+          >
+            Current Quarter
+          </button>
+          <button
+            className={`filter-btn ${filterType === 'custom' ? 'active' : ''}`}
+            onClick={() => setFilterType('custom')}
+          >
+            Custom Dates
+          </button>
+        </div>
+        {onToggleExpand && (
+          <button 
+            className="date-filter-chevron" 
+            onClick={onToggleExpand}
+            aria-label={isExpanded ? 'Collapse filters' : 'Expand filters'}
+          >
+            {isExpanded ? '▲' : '▼'}
+          </button>
+        )}
       </div>
 
       {filterType === 'custom' && (

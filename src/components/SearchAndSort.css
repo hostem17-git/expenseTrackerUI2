@@ -1,13 +1,28 @@
 .search-sort-container {
-  background: var(--bg-primary);
-  border-radius: var(--radius-lg);
-  padding: 20px 24px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-color);
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+  border: none;
+  border-top: 1px solid var(--border-color);
+  padding-top: 24px;
+  margin-top: 24px;
   display: flex;
   gap: 16px;
   align-items: center;
   flex-wrap: wrap;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .search-box {
@@ -103,7 +118,8 @@
 
 @media (max-width: 768px) {
   .search-sort-container {
-    padding: 16px;
+    padding-top: 20px;
+    margin-top: 20px;
     flex-direction: column;
     align-items: stretch;
   }

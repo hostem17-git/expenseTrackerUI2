@@ -45,6 +45,7 @@ const ExpenseTracker = () => {
   // Bulk selection state
   const [selectedExpenseIds, setSelectedExpenseIds] = useState(new Set());
   const [showCharts, setShowCharts] = useState(false);
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
   
   const { logout } = useAuth();
 
@@ -349,22 +350,28 @@ const ExpenseTracker = () => {
       <div className="app-content">
         <div className="filters-section">
           <DateFilter 
-          onFilterChange={handleFilterChange} 
-          currentDateRange={dateRange}
-        />
-          
-          <CategoryFilter
-            expenses={allExpenses}
-            onFilterChange={handleCategoryFilterChange}
-            activeFilters={categoryFilters}
+            onFilterChange={handleFilterChange} 
+            currentDateRange={dateRange}
+            onToggleExpand={() => setFiltersExpanded(!filtersExpanded)}
+            isExpanded={filtersExpanded}
           />
           
-          <SearchAndSort
-            onSearchChange={handleSearchChange}
-            onSortChange={handleSortChange}
-            searchQuery={searchQuery}
-            sortOption={sortOption}
-          />
+          {filtersExpanded && (
+            <>
+              <CategoryFilter
+                expenses={allExpenses}
+                onFilterChange={handleCategoryFilterChange}
+                activeFilters={categoryFilters}
+              />
+              
+              <SearchAndSort
+                onSearchChange={handleSearchChange}
+                onSortChange={handleSortChange}
+                searchQuery={searchQuery}
+                sortOption={sortOption}
+              />
+            </>
+          )}
         </div>
         
         {showCharts && (
