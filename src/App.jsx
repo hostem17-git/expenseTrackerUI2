@@ -11,6 +11,7 @@ import ExpenseCharts from './components/ExpenseCharts';
 import BulkActions from './components/BulkActions';
 import Pagination from './components/Pagination';
 import ThemeToggle from './components/ThemeToggle';
+import HamburgerMenu from './components/HamburgerMenu';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import ForgotPassword from './components/ForgotPassword';
@@ -331,6 +332,17 @@ const ExpenseTracker = () => {
               Logout
             </button>
           </div>
+          <HamburgerMenu
+            onRefresh={handleRefresh}
+            onExportCSV={handleExportCSV}
+            onPrint={handlePrint}
+            onToggleCharts={() => setShowCharts(!showCharts)}
+            showCharts={showCharts}
+            onCategorize={handleCategorizeExpenses}
+            onAddExpense={() => setShowExpenseForm(true)}
+            onLogout={logout}
+            loading={loading}
+          />
         </div>
       </header>
       
