@@ -2,7 +2,7 @@ import React from 'react';
 import { formatDate, formatCurrency } from '../utils/dateUtils';
 import './ExpenseList.css';
 
-const ExpenseList = ({ expenses, totalAmount: propTotalAmount, dateRange, loading, error, onEdit, onDelete, selectedIds, onSelectExpense }) => {
+const ExpenseList = ({ expenses, totalAmount: propTotalAmount, dateRange, loading, error, onEdit, onDelete, selectedIds, onSelectExpense, hiddenIds, onHideExpense, onUnhideAll }) => {
   const formatDateRange = () => {
     if (!dateRange) return '';
     const start = formatDate(dateRange.start);
@@ -40,6 +40,8 @@ const ExpenseList = ({ expenses, totalAmount: propTotalAmount, dateRange, loadin
     );
   }
 
+  const hasHiddenExpenses = hiddenIds && hiddenIds.size > 0;
+
   if (expenses.length === 0) {
     return (
       <div className="expense-list-container">
@@ -47,8 +49,26 @@ const ExpenseList = ({ expenses, totalAmount: propTotalAmount, dateRange, loadin
           <h2>Expenses</h2>
           {dateRange && <p className="date-range">{formatDateRange()}</p>}
         </div>
+        
+        <div className="total-summary">
+          <span className="total-label">Total:</span>
+          <span className="total-amount">{formatCurrency(propTotalAmount || 0)}</span>
+        </div>
+        
+        {hasHiddenExpenses && onUnhideAll && (
+          <div className="unhide-all-container">
+            <button 
+              className="unhide-all-button" 
+              onClick={onUnhideAll}
+              title="Show all hidden expenses"
+            >
+              👁️ Unhide All ({hiddenIds.size})
+            </button>
+          </div>
+        )}
+        
         <div className="empty-state">
-          <p>No expenses found for the selected period.</p>
+          <p>{hasHiddenExpenses ? 'All expenses are hidden.' : 'No expenses found for the selected period.'}</p>
         </div>
       </div>
     );
@@ -70,6 +90,18 @@ const ExpenseList = ({ expenses, totalAmount: propTotalAmount, dateRange, loadin
         <span className="total-label">Total:</span>
         <span className="total-amount">{formatCurrency(totalAmount)}</span>
       </div>
+      
+      {hasHiddenExpenses && onUnhideAll && (
+        <div className="unhide-all-container">
+          <button 
+            className="unhide-all-button" 
+            onClick={onUnhideAll}
+            title="Show all hidden expenses"
+          >
+            👁️ Unhide All ({hiddenIds.size})
+          </button>
+        </div>
+      )}
 
       <div className="expense-list">
         {expenses.map((expense) => (
@@ -95,32 +127,39 @@ const ExpenseList = ({ expenses, totalAmount: propTotalAmount, dateRange, loadin
             </div>
             <div className="expense-footer">
               <div className="expense-date">{formatDate(expense.created)}</div>
-              {(onEdit || onDelete) && (
-                <div className="expense-actions">
-                  {onEdit && (
-                    <button 
-                      className="action-button edit-button" 
-                      onClick={() => onEdit(expense)}
-                      title="Edit expense"
-                    >
-                      ✏️
-                    </button>
-                  )}
-                  {onDelete && (
-                    <button 
-                      className="action-button delete-button" 
-                      onClick={() => {
-                        if (window.confirm('Are you sure you want to delete this expense?')) {
-                          onDelete(expense.id);
-                        }
-                      }}
-                      title="Delete expense"
-                    >
-                      🗑️
-                    </button>
-                  )}
-                </div>
-              )}
+              <div className="expense-actions">
+                {onHideExpense && (
+                  <button 
+                    className="action-button hide-button" 
+                    onClick={() => onHideExpense(expense.id)}
+                    title="Hide expense"
+                  >
+                    👁️‍🗨️
+                  </button>
+                )}
+                {onEdit && (
+                  <button 
+                    className="action-button edit-button" 
+                    onClick={() => onEdit(expense)}
+                    title="Edit expense"
+                  >
+                    ✏️
+                  </button>
+                )}
+                {onDelete && (
+                  <button 
+                    className="action-button delete-button" 
+                    onClick={() => {
+                      if (window.confirm('Are you sure you want to delete this expense?')) {
+                        onDelete(expense.id);
+                      }
+                    }}
+                    title="Delete expense"
+                  >
+                    🗑️
+                  </button>
+                )}
+              </div>
             </div>
             </div>
           </div>

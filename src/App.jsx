@@ -47,6 +47,9 @@ const ExpenseTracker = () => {
   const [showCharts, setShowCharts] = useState(false);
   const [filtersExpanded, setFiltersExpanded] = useState(false);
   
+  // Hidden expenses state
+  const [hiddenExpenseIds, setHiddenExpenseIds] = useState(new Set());
+  
   const { logout } = useAuth();
 
   useEffect(() => {
@@ -89,17 +92,34 @@ const ExpenseTracker = () => {
     setCurrentPage(1);
     // Clear selection when filters change
     setSelectedExpenseIds(new Set());
+    // Clear hidden expenses when filters change (optional - you may want to keep them hidden)
+    // setHiddenExpenseIds(new Set());
   }, [allExpenses, searchQuery, sortOption, categoryFilters]);
 
-  // Calculate pagination
-  const totalItems = filteredExpenses.length;
+  // Filter out hidden expenses for display
+  const visibleExpenses = filteredExpenses.filter(expense => !hiddenExpenseIds.has(expense.id));
+  
+  // Calculate total amount from visible filtered expenses (not just current page, excluding hidden)
+  const totalFilteredAmount = visibleExpenses.reduce((sum, expense) => sum + (expense.amount || 0), 0);
+
+  // Calculate pagination on visible expenses
+  const totalItems = visibleExpenses.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedExpenses = filteredExpenses.slice(startIndex, endIndex);
+  const paginatedExpenses = visibleExpenses.slice(startIndex, endIndex);
   
-  // Calculate total amount from all filtered expenses (not just current page)
-  const totalFilteredAmount = filteredExpenses.reduce((sum, expense) => sum + (expense.amount || 0), 0);
+  // Handler to hide an expense
+  const handleHideExpense = (id) => {
+    const newHidden = new Set(hiddenExpenseIds);
+    newHidden.add(id);
+    setHiddenExpenseIds(newHidden);
+  };
+  
+  // Handler to unhide all expenses
+  const handleUnhideAll = () => {
+    setHiddenExpenseIds(new Set());
+  };
 
   const loadExpenses = async (dateRange) => {
     setLoading(true);
@@ -409,6 +429,9 @@ const ExpenseTracker = () => {
             onDelete={handleDeleteExpense}
             selectedIds={selectedExpenseIds}
             onSelectExpense={handleSelectExpense}
+            hiddenIds={hiddenExpenseIds}
+            onHideExpense={handleHideExpense}
+            onUnhideAll={handleUnhideAll}
           />
           
           {totalItems > 0 && (

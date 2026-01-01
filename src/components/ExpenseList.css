@@ -206,6 +206,40 @@
   color: var(--danger-color);
 }
 
+.hide-button:hover {
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.unhide-all-container {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.unhide-all-button {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.unhide-all-button:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-color: var(--accent-color);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
 .empty-state {
   text-align: center;
   padding: 80px 20px;
